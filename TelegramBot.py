@@ -13,10 +13,14 @@ class TelegramBot(BaseClass):
                              "/keyboard": {"desc": "display keyboard", "method": self.keyb}}
         
         self._textdict = {"Steigerlamp": {"desc":"empty", "method":self.toggle_steigerlamp},
+                          "Schouw": {"desc":"empty", "method":self.toggle_schouwlamp},
+                          "Slaapkamer plafondlamp": {"desc":"empty", "method":self.toggle_bedroomlamp},
+                          "Vakkenkast": {"desc":"empty", "method":self.vakkenkast_lamp},
+                          "Plafondlamp keuken": {"desc":"empty", "method":self.plafondlamp_keuken},
                           "Living Room": {"desc":"empty", "method":self.keyb_livingroom}, 
-                          "Dining Room": {"desc":"empty", "method":self.toggle_steigerlamp},
-                          "Kitchen": {"desc":"empty", "method":self.toggle_steigerlamp}, 
-                          "Bedroom": {"desc":"empty", "method":self.toggle_steigerlamp},
+                          "Dining Room": {"desc":"empty", "method":self.keyb_diningroom},
+                          "Kitchen": {"desc":"empty", "method":self.keyb_kitchen}, 
+                          "Bedroom": {"desc":"empty", "method":self.keyb_bedroom},
                           "Back --> General": {"desc":"empty", "method":self.keyb}
         }
     
@@ -133,6 +137,34 @@ class TelegramBot(BaseClass):
                               target=target_id,
                               message=msg)
     
+    def toggle_schouwlamp(self, target_id): 
+        msg = "Toggeling the lamp on the schouw"
+        self.call_service("light/toggle", entity_id="light.antique_sta_lamp")
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg)
+                             
+    def toggle_bedroomlamp(self, target_id): 
+        msg = "Toggeling the plafondlamp in de slaapkamer"
+        self.call_service("light/toggle", entity_id="light.plafondlamp_bed")
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg)
+    
+    def vakkenkast_lamp(self, target_id): 
+        msg = "Toggeling the lamp in de vakkenkast"
+        self.call_service("light/toggle", entity_id="light.vakkenkast_lamp")
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg)
+    
+    def plafondlamp_keuken(self, target_id): 
+        msg = "Toggeling the plafondlamp in de keuken"
+        self.call_service("light/toggle", entity_id="light.plafondlamp_keuken")
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg)
+                             
     def keyb(self, target_id): #general keyboard
         msg = "Make a choice you ..."
         keyboard_list = ["Living Room", "Dining Room", "Kitchen", "Bedroom"]
@@ -144,6 +176,27 @@ class TelegramBot(BaseClass):
     def keyb_livingroom(self, target_id): #specific for livingroom
         msg = "Make a choice to toggle"
         keyboard_list = ["Steigerlamp", "Schouw", "Back --> General"]
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg, keyboard=keyboard_list)
+    
+    def keyb_bedroom(self, target_id): #specific for bedroom
+        msg = "Make a choice to toggle"
+        keyboard_list = ["Slaapkamer plafondlamp", "Back --> General"]
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg, keyboard=keyboard_list)
+    
+    def keyb_diningroom(self, target_id): #specific for diningroom
+        msg = "Make a choice to toggle"
+        keyboard_list = ["Vakkenkast", "Back --> General"]
+        self.call_service('telegram_bot/send_message',
+                              target=target_id,
+                              message=msg, keyboard=keyboard_list)
+    
+    def keyb_kitchen(self, target_id): #specific for kitchen
+        msg = "Make a choice to toggle"
+        keyboard_list = ["Plafondlamp keuken", "Back --> General"]
         self.call_service('telegram_bot/send_message',
                               target=target_id,
                               message=msg, keyboard=keyboard_list)
