@@ -1,4 +1,13 @@
-# appdaemon-telegrambot
+# HomeAssistant_TelegramBot
+### From appdaemon-telegrambot by [foxcris](https://github.com/foxcris/appdaemon-telegrambot)
+
+I have been cleaning up the Telegram Bot by foxcris for my own needs. I have primarily switched to using the Telegram Keyboard feature for communication with the Bot. Also, the main use for now with this bot is to toggle lights in my home.
+
+## Screenshots
+<img src="https://i.imgur.com/8XHV2ID.png" width="350">
+<img src="https://i.imgur.com/mAsshbX.png" width="350">
+
+# Original ReadMe content here below.
 
 Simple bot to control your home-assistant via a telegram chatbot.
 As a requirement, the telegram platform has to be configured in home-assistant (https://www.home-assistant.io/components/notify.telegram/).
