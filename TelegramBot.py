@@ -3,6 +3,7 @@ import re
 import hashlib
 import ast
 from datetime import datetime
+import appdaemon.plugins.hass.hassapi as hass
 
 class TelegramBot(BaseClass):
     
@@ -10,7 +11,9 @@ class TelegramBot(BaseClass):
 
         self._commanddict = {"/hi": {"desc": "greetings", "method": self.greet_user_if_new_conversation},
                              "/toggle_light": {"desc": "Turn on light", "method": self.toggle_steigerlamp},
-                             "/keyboard": {"desc": "display keyboard", "method": self.keyb}}
+                             "/keyboard": {"desc": "display keyboard", "method": self.keyb},
+                             "/state_light": {"desc": "State of light", "method": self._state_light},
+                             }
         
         self._textdict = {"Steigerlamp": {"desc":"empty", "method":self.toggle_steigerlamp},
                           "Schouw": {"desc":"empty", "method":self.toggle_schouwlamp},
@@ -128,7 +131,20 @@ class TelegramBot(BaseClass):
         self.call_service('telegram_bot/send_message',
                               target=target_id,
                               message=msg)
-
+    
+    def _state_light(self, target_id):
+        # Edit to include your own lights
+        list_lights = ["light.vakkenkast_lamp", "light.steigerhout_lamp", "light.plafondlamp_keuken", "light.plafondlamp_bed", "light.antique_sta_lamp"]
+        msg = ""
+        for x in range(0, len(list_lights)):
+            x_as_lights = list_lights[x]
+            friendlyname = self.get_state(x_as_lights, attribute='friendly_name')
+            friendlyname = re.sub('_', ' ', friendlyname)
+            state = self.get_state(x_as_lights)
+            state = "{state} " if state == 'on' else state 
+            msg += "{}  :  {}\n".format(self.get_state(x_as_lights), friendlyname)
+            
+        self.call_service('telegram_bot/send_message', target=target_id, message=msg)
                               
     def toggle_steigerlamp(self, target_id): 
         msg = "Toggeling the Stijgerhoutlamp"
